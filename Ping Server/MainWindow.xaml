@@ -7,14 +7,18 @@
         mc:Ignorable="d"
         Title="Server Ping" SizeToContent="WidthAndHeight">
 
-    <Border Padding="10">
-
-        <StackPanel>
-            <Grid x:Name="Grid1">
-                
-            </Grid>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Close" Click="MenuItem_Click">                    
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <StackPanel Margin="5, 5, 5, 5">
+            <Grid x:Name="Grid1"/>
             <Button Content="Add Server" Click="Button_Click"/>
         </StackPanel>
-    </Border>
+    </DockPanel>
+        
 
 </Window>

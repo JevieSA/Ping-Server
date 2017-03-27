@@ -68,14 +68,14 @@ namespace Ping_Server
                         stack.Children.Add(address);
                         stack.Children.Add(reply);
                         stack.Children.Add(latency);
-                        stack.Margin = new Thickness(0, 5, 0, 5);
+                        stack.Margin = new Thickness(5, 5, 5, 5);
 
                         // adding ui elements to grid
                         try
                         {
                             Grid1.ColumnDefinitions.Add(new ColumnDefinition());
                             Grid.SetColumn(stack, columnCount);
-                            Grid1.ColumnDefinitions[columnCount].Width = GridLength.Auto;
+                            Grid1.ColumnDefinitions[columnCount].Width = new GridLength(150);
 
                             Grid1.RowDefinitions.Add(new RowDefinition());
                             Grid.SetRow(stack, rowCount);
@@ -108,7 +108,7 @@ namespace Ping_Server
                         stack.Children.Add(addressResult);
                         stack.Children.Add(replyResult);
                         stack.Children.Add(latencyResult);
-                        stack.Margin = new Thickness(0, 5, 0, 5);
+                        stack.Margin = new Thickness(5, 5, 5, 5);
                         stackPanelList.Add(stack);
 
                         // adding ui elements to grid
@@ -116,7 +116,7 @@ namespace Ping_Server
                         {
                             Grid1.ColumnDefinitions.Add(new ColumnDefinition());
                             Grid.SetColumn(stack, columnCount + 1);
-                            Grid1.ColumnDefinitions[columnCount + 1].Width = GridLength.Auto;
+                            Grid1.ColumnDefinitions[columnCount + 1].Width = new GridLength(150);
 
                             Grid1.RowDefinitions.Add(new RowDefinition());
                             Grid.SetRow(stack, rowCount);
@@ -167,6 +167,11 @@ namespace Ping_Server
             this.Close();
             clearUI();
             addServer.Show();
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }
