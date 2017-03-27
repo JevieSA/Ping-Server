@@ -26,6 +26,7 @@ namespace Ping_Server
     {
         private List<List<TextBlock>> labelLists;
         private List<TextBlock> textBlocksList;
+        private List<StackPanel> stackPanelList;
         private List<Server> serverList;
         public bool checkPing = true;
 
@@ -49,7 +50,8 @@ namespace Ping_Server
                 int count = 0;
                 foreach (Server server in serverList)
                 {
-                    List<TextBlock> temp = labelLists.ElementAt(count);
+                    List<TextBlock> textBlockTemp = labelLists.ElementAt(count);
+                    StackPanel stackPanelTemp = stackPanelList.ElementAt(count);
                     Ping ping = new Ping();
                     long latency = 999;
                     string reply = "failed";
@@ -67,10 +69,21 @@ namespace Ping_Server
                         break;
                     }
 
-                    temp.ElementAt(0).Text = server.Name;
-                    temp.ElementAt(1).Text = server.Address;
-                    temp.ElementAt(2).Text = reply;
-                    temp.ElementAt(3).Text = latency + "ms";
+                    textBlockTemp.ElementAt(0).Text = server.Name + "\t";
+                    textBlockTemp.ElementAt(1).Text = server.Address + "\t";
+                    textBlockTemp.ElementAt(2).Text = reply + "\t";
+                    textBlockTemp.ElementAt(3).Text = latency + "ms\t";
+
+                    if (reply.Equals("Success"))
+                    {
+                        var brush = new BrushConverter();
+                        stackPanelTemp.Background = (Brush)brush.ConvertFrom("#32CD32");
+                    }
+                    else
+                    {
+                        var brush = new BrushConverter();
+                        stackPanelTemp.Background = (Brush)brush.ConvertFrom("#DC143C");
+                    }
 
                     count++;
                 }//-- end -- foreach
@@ -116,7 +129,9 @@ namespace Ping_Server
         {
             StackPanel stack;
             labelLists = new List<List<TextBlock>>();
-            int count = 0;
+            stackPanelList = new List<StackPanel>();
+            int rowCount = 0;
+            int columnCount = 0;
 
             foreach (Server s in serverList)
             {
@@ -146,11 +161,11 @@ namespace Ping_Server
                         try
                         {
                             Grid1.ColumnDefinitions.Add(new ColumnDefinition());
-                            Grid.SetColumn(stack, 0);
-                            Grid1.ColumnDefinitions[0].Width = GridLength.Auto;
+                            Grid.SetColumn(stack, columnCount);
+                            Grid1.ColumnDefinitions[columnCount].Width = GridLength.Auto;
 
                             Grid1.RowDefinitions.Add(new RowDefinition());
-                            Grid.SetRow(stack, count);
+                            Grid.SetRow(stack, rowCount);
                             Grid1.Children.Add(stack);
                         }
                         catch (Exception e)
@@ -181,16 +196,17 @@ namespace Ping_Server
                         stack.Children.Add(replyResult);
                         stack.Children.Add(latencyResult);
                         stack.Margin = new Thickness(0, 5, 0, 5);
+                        stackPanelList.Add(stack);
 
                         // adding ui elements to grid
                         try
                         {
                             Grid1.ColumnDefinitions.Add(new ColumnDefinition());
-                            Grid.SetColumn(stack, 1);
-                            Grid1.ColumnDefinitions[1].Width = GridLength.Auto;                            
-                            
+                            Grid.SetColumn(stack, columnCount + 1);
+                            Grid1.ColumnDefinitions[columnCount + 1].Width = GridLength.Auto;
+
                             Grid1.RowDefinitions.Add(new RowDefinition());
-                            Grid.SetRow(stack, count);
+                            Grid.SetRow(stack, rowCount);
                             Grid1.Children.Add(stack);
                         }
                         catch (Exception e)
@@ -202,7 +218,17 @@ namespace Ping_Server
                         labelLists.Add(textBlocksList);
                     }//-- end -- else
                 }//-- end -- column for loop
-                count++;
+
+                if (rowCount == 3)
+                {
+                    rowCount = 0;
+                    columnCount = columnCount + 2;
+                }
+                else
+                {
+                    rowCount++;
+                }
+
             }//-- end -- foreach
         }//-- end -- initialiseUI()
 
@@ -211,7 +237,7 @@ namespace Ping_Server
             Grid1.DataContext = null;
             Grid1.DataContext = new Grid();
             textBlocksList.Clear();
-            labelLists.Clear();            
+            labelLists.Clear();
         }
 
 
