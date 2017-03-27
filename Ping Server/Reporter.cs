@@ -18,7 +18,7 @@ namespace Ping_Server
             client.Timeout = 10000;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
-            client.Credentials = new System.Net.NetworkCredential("jeblight", "JcD2tLsAUH4N");
+            client.Credentials = new System.Net.NetworkCredential("jeblight", "");
 
             MailMessage mail = new MailMessage("noreply@jeblight.co.za", "jblight@hatfieldcs.co.za",
                 "Server Offline", "The following server is offline: " + name);

@@ -98,9 +98,6 @@ namespace Ping_Server
                             firstError = false;
                             errorReported = DateTime.Now;
                         }
-
-                        double totalMinutes = timeSpan.TotalMinutes;
-
                         if (timeSpan.TotalMinutes > 10)
                         {
                             report.sendReport(server.Name);
