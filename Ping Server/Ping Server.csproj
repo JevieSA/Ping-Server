@@ -60,6 +60,7 @@
     </Compile>
     <Compile Include="Reporter.cs" />
     <Compile Include="Server.cs" />
+    <Compile Include="ServerPinger.cs" />
     <Page Include="AddServerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

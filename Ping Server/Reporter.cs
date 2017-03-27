@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
+﻿using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,7 +6,7 @@ namespace Ping_Server
 {
     class Reporter
     {
-        public void sendReport(string name)
+        public async Task sendReport(string name)
         {
             SmtpClient client = new SmtpClient();
             client.Port = 587;
@@ -25,7 +22,7 @@ namespace Ping_Server
             mail.BodyEncoding = UTF8Encoding.UTF8;
             mail.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
 
-            client.Send(mail);
+            await client.SendMailAsync(mail);
         }
 
     }

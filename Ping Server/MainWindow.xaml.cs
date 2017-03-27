@@ -1,21 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Ping_Server
 {
@@ -28,6 +14,7 @@ namespace Ping_Server
         private List<TextBlock> textBlocksList;
         private List<StackPanel> stackPanelList;
         private List<Server> serverList;
+        private Server server;
         private DateTime errorReported = DateTime.Now;
         private bool firstError = true;
 
@@ -37,110 +24,13 @@ namespace Ping_Server
         public MainWindow()
         {
             InitializeComponent();
-            getServers();
+
+            server = new Server();
+            serverList = server.getServers();
             initialiseUI();
-            runPing();
-        }
 
-        /// <summary>
-        /// Does a ping async on all servers in serverList
-        /// Updates UI with results of Ping
-        /// </returns>
-        public async Task runPing()
-        {
-
-
-            //Updating UI
-            while (checkPing)
-            {
-
-                int count = 0;
-                foreach (Server server in serverList)
-                {
-                    List<TextBlock> textBlockTemp = labelLists.ElementAt(count);
-                    StackPanel stackPanelTemp = stackPanelList.ElementAt(count);
-                    Ping ping = new Ping();
-                    long latency = 999;
-                    string reply = "failed";
-
-                    try
-                    {
-                        //Doing ping
-                        PingReply pingReply = await ping.SendPingAsync(server.Address, 500);
-                        reply = "" + pingReply.Status;
-                        latency = pingReply.RoundtripTime;
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show("Error during ping request.\n" + e.Message, "Ping Request");
-                        break;
-                    }
-
-                    textBlockTemp.ElementAt(0).Text = server.Name + "\t";
-                    textBlockTemp.ElementAt(1).Text = server.Address + "\t";
-                    textBlockTemp.ElementAt(2).Text = reply + "\t";
-                    textBlockTemp.ElementAt(3).Text = latency + "ms\t";
-
-                    if (reply.Equals("Success"))
-                    {
-                        var brush = new BrushConverter();
-                        stackPanelTemp.Background = (Brush)brush.ConvertFrom("#32CD32");
-                    }
-                    else
-                    {
-                        TimeSpan timeSpan = new TimeSpan();
-                        timeSpan = errorReported - DateTime.Now;
-                        Reporter report = new Reporter();
-
-                        if (firstError)
-                        {
-                            report.sendReport(server.Name);
-                            firstError = false;
-                            errorReported = DateTime.Now;
-                        }
-                        if (timeSpan.TotalMinutes > 10)
-                        {
-                            report.sendReport(server.Name);
-                            errorReported = DateTime.Now;
-                        }
-
-                        var brush = new BrushConverter();
-                        stackPanelTemp.Background = (Brush)brush.ConvertFrom("#DC143C");
-                    }
-
-                    count++;
-                }//-- end -- foreach
-                await Task.Delay(5000);
-            }//-- end -- while
-        }
-
-        /// <summary>
-        /// Populates serverList
-        /// </summary>
-        public void getServers()
-        {
-            try
-            {
-                using (StreamReader sr = new StreamReader("servers.txt", true))
-                {
-                    serverList = new List<Server>();
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        string[] lineSplit = line.Split('#');
-
-                        var server = new Server();
-                        server.Name = lineSplit[0];
-                        server.Address = lineSplit[1];
-
-                        serverList.Add(server);
-                    }//-- end -- while line
-                }//-- end -- using StreamReader
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("Error readingin the file.\n" + e, "File Read");
-            }
+            ServerPinger pinger = new ServerPinger();
+            pinger.runPing(labelLists, stackPanelList, serverList, checkPing, errorReported, firstError);
         }
 
         /// <summary>
@@ -150,9 +40,9 @@ namespace Ping_Server
         /// </summary>
         public void initialiseUI()
         {
+            stackPanelList = new List<StackPanel>();
             StackPanel stack;
             labelLists = new List<List<TextBlock>>();
-            stackPanelList = new List<StackPanel>();
             int rowCount = 0;
             int columnCount = 0;
 
@@ -255,6 +145,10 @@ namespace Ping_Server
             }//-- end -- foreach
         }//-- end -- initialiseUI()
 
+
+        /// <summary>
+        /// Clears the UI so that a new server can be added
+        /// </summary>
         public void clearUI()
         {
             Grid1.DataContext = null;
@@ -263,7 +157,9 @@ namespace Ping_Server
             labelLists.Clear();
         }
 
-
+        /// <summary>
+        /// Calls the AddServerWindow screen
+        /// </summary>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             AddServerWindow addServer = new AddServerWindow();
