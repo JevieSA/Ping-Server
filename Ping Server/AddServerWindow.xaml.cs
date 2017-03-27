@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,5 +24,35 @@ namespace Ping_Server
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string name = txtName.Text;
+            string address = txtAddress.Text;
+            string line = name + "#" + address;
+            writeToFile(line);
+            
+            this.Hide();
+
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.checkPing = true;
+            mainWindow.Show();      
+        }
+
+        public void writeToFile(string line)
+        {
+            try
+            {
+                using (StreamWriter sr = new StreamWriter("servers.txt", true))
+                {
+                    sr.WriteLine(line);
+                }
+            }//-- end -- try
+            catch(Exception e)
+            {
+                MessageBox.Show("Error writing server to file\n" + e.Message, "Write to File");
+            }//-- end -- catch
+        }
+
     }
 }

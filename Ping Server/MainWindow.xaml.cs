@@ -27,6 +27,7 @@ namespace Ping_Server
         private List<List<TextBlock>> labelLists;
         private List<TextBlock> textBlocksList;
         private List<Server> serverList;
+        public bool checkPing = true;
 
         public MainWindow()
         {
@@ -43,7 +44,7 @@ namespace Ping_Server
         public async Task runPing()
         {
             //Updating UI
-            while (true)
+            while (checkPing)
             {
                 int count = 0;
                 foreach (Server server in serverList)
@@ -56,7 +57,7 @@ namespace Ping_Server
                     try
                     {
                         //Doing ping
-                        PingReply pingReply = await ping.SendPingAsync(server.Address);
+                        PingReply pingReply = await ping.SendPingAsync(server.Address, 500);
                         reply = "" + pingReply.Status;
                         latency = pingReply.RoundtripTime;
                     }
@@ -204,5 +205,23 @@ namespace Ping_Server
                 count++;
             }//-- end -- foreach
         }//-- end -- initialiseUI()
+
+        public void clearUI()
+        {
+            Grid1.DataContext = null;
+            Grid1.DataContext = new Grid();
+            textBlocksList.Clear();
+            labelLists.Clear();            
+        }
+
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            AddServerWindow addServer = new AddServerWindow();
+            checkPing = false;
+            this.Close();
+            clearUI();
+            addServer.Show();
+        }
     }
 }

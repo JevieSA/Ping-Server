@@ -13,6 +13,7 @@
             <Grid x:Name="Grid1">
                 
             </Grid>
+            <Button Content="Add Server" Click="Button_Click"/>
         </StackPanel>
     </Border>
 

@@ -11,6 +11,5 @@ namespace Ping_Server
     {
         public string Name { get; set; }
         public string Address { get; set; }
-        public PingReply PingReply { get; set; }
     }
 }

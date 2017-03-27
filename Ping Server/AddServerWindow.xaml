@@ -5,8 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ping_Server"
         mc:Ignorable="d"
-        Title="AddServerWindow" Height="300" Width="300">
-    <Grid>
-        
+        Title="AddServerWindow" SizeToContent="WidthAndHeight">
+    <Grid Margin="5, 5, 5 ,5">
+        <StackPanel>
+            <TextBlock Text="Server Name" Margin="0, 5"/>
+            <TextBox x:Name="txtName"/>
+            <TextBlock Text="Server Name" Margin="0 ,5"/>
+            <TextBox x:Name="txtAddress"/>
+            <Button Content="Add Server" Margin="5, 5" Click="Button_Click"/>
+        </StackPanel>
     </Grid>
 </Window>
