@@ -58,6 +58,7 @@
     <Compile Include="AddServerWindow.xaml.cs">
       <DependentUpon>AddServerWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Reporter.cs" />
     <Compile Include="Server.cs" />
     <Page Include="AddServerWindow.xaml">
       <SubType>Designer</SubType>

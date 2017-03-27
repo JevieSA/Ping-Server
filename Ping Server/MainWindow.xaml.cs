@@ -28,7 +28,11 @@ namespace Ping_Server
         private List<TextBlock> textBlocksList;
         private List<StackPanel> stackPanelList;
         private List<Server> serverList;
+        private DateTime errorReported = DateTime.Now;
+        private bool firstError = true;
+
         public bool checkPing = true;
+
 
         public MainWindow()
         {
@@ -44,9 +48,12 @@ namespace Ping_Server
         /// </returns>
         public async Task runPing()
         {
+
+
             //Updating UI
             while (checkPing)
             {
+
                 int count = 0;
                 foreach (Server server in serverList)
                 {
@@ -81,6 +88,25 @@ namespace Ping_Server
                     }
                     else
                     {
+                        TimeSpan timeSpan = new TimeSpan();
+                        timeSpan = errorReported - DateTime.Now;
+                        Reporter report = new Reporter();
+
+                        if (firstError)
+                        {
+                            report.sendReport(server.Name);
+                            firstError = false;
+                            errorReported = DateTime.Now;
+                        }
+
+                        double totalMinutes = timeSpan.TotalMinutes;
+
+                        if (timeSpan.TotalMinutes > 10)
+                        {
+                            report.sendReport(server.Name);
+                            errorReported = DateTime.Now;
+                        }
+
                         var brush = new BrushConverter();
                         stackPanelTemp.Background = (Brush)brush.ConvertFrom("#DC143C");
                     }
