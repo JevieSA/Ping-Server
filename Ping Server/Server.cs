@@ -8,6 +8,7 @@ namespace Ping_Server
     {
         public string Name { get; set; }
         public string Address { get; set; }
+        public int ServerID { get; set; }
 
         /// <summary>
         /// Populates a serverList
@@ -15,7 +16,7 @@ namespace Ping_Server
         public List<Server> getServers()
         {
             List<Server> serverList = new List<Server>();
-
+            ServerID = 0;
             try
             {
                 using (StreamReader sr = new StreamReader("servers.txt", true))

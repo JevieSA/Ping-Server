@@ -45,7 +45,8 @@ namespace Ping_Server
             labelLists = new List<List<TextBlock>>();
             int rowCount = 0;
             int columnCount = 0;
-
+            
+            //Looping through serverList to update UI
             foreach (Server s in serverList)
             {
                 for (int i = 0; i < 2; i++)
